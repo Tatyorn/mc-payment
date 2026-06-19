@@ -67,8 +67,6 @@ RUN chown -R www-data:www-data \
 
 EXPOSE 8080
 
-USER www-data
-
 HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
     CMD php -r "echo @file_get_contents('http://localhost:8080/up') ? 'ok' : 'fail';" 2>/dev/null || exit 1
 
