@@ -52,7 +52,9 @@ return [
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => 'Sistema de gerenciamento de solicitações de pagamento (Payment Request). Permite que funcionários criem solicitações de pagamento em múltiplas moedas e que o financeiro aprove ou rejeite essas solicitações.',
+        'description' => 'Payment Request Management System. Allows employees to create payment requests in multiple currencies and finance users to approve or reject them.
+
+Supported languages: en (English), pt_BR (Brazilian Portuguese), pt_PT (European Portuguese).',
     ],
 
     'ui' => [

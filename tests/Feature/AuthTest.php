@@ -100,11 +100,9 @@ it('returns user data when authenticated', function () {
     $response = getJson('/api/user');
 
     $response->assertSuccessful()
-        ->assertJson([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-        ]);
+        ->assertJsonPath('data.id', $user->id)
+        ->assertJsonPath('data.name', $user->name)
+        ->assertJsonPath('data.email', $user->email);
 });
 
 it('fails when not authenticated', function () {

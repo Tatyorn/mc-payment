@@ -3,7 +3,7 @@
     "info": {
         "title": "MC Payment API",
         "version": "1.0.0",
-        "description": "Sistema de gerenciamento de solicita\u00e7\u00f5es de pagamento (Payment Request). Permite que funcion\u00e1rios criem solicita\u00e7\u00f5es de pagamento em m\u00faltiplas moedas e que o financeiro aprove ou rejeite essas solicita\u00e7\u00f5es."
+        "description": "Payment Request Management System. Allows employees to create payment requests in multiple currencies and finance users to approve or reject them.\n\nSupported languages: en (English), pt_BR (Brazilian Portuguese), pt_PT (European Portuguese)."
     },
     "servers": [
         {
