@@ -26,7 +26,6 @@ RUN npm ci --ignore-scripts
 
 COPY vite.config.js ./
 COPY resources/ resources/
-COPY tailwind.config.js ./
 
 RUN npm run build
 
