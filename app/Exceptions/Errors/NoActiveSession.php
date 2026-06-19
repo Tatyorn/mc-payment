@@ -12,7 +12,7 @@ class NoActiveSession extends ApiErrorException
             type: 'no_active_session',
             title: 'No Active Session',
             status: 404,
-            detail: 'No active session found.',
+            detail: __('errors.no_active_session'),
         );
     }
 }

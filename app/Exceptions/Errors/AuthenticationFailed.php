@@ -12,7 +12,7 @@ class AuthenticationFailed extends ApiErrorException
             type: 'authentication_failed',
             title: 'Authentication Failed',
             status: 401,
-            detail: 'Invalid credentials.',
+            detail: __('errors.authentication_failed'),
         );
     }
 }

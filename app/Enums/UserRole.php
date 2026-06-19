@@ -16,4 +16,9 @@ enum UserRole: string
     {
         return $this === self::FINANCE;
     }
+
+    public function isEmployee(): bool
+    {
+        return $this === self::EMPLOYEE;
+    }
 }

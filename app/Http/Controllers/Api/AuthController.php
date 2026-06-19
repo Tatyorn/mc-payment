@@ -22,7 +22,7 @@ class AuthController
         );
 
         return response()->json([
-            'message' => 'User registered successfully.',
+            'message' => __('errors.register_success'),
             'user' => UserResource::make($user),
         ], 201);
     }
@@ -40,7 +40,7 @@ class AuthController
         $token = $user->createToken('api-token')->accessToken;
 
         return response()->json([
-            'message' => 'Login successful.',
+            'message' => __('errors.login_success'),
             'token' => $token,
         ]);
     }
@@ -55,7 +55,7 @@ class AuthController
 
         $token->revoke();
 
-        return response()->json(['message' => 'Logged out successfully.']);
+        return response()->json(['message' => __('errors.logout_success')]);
     }
 
     public function me(Request $request): JsonResponse

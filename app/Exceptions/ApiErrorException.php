@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use RuntimeException;
 
 class ApiErrorException extends RuntimeException
@@ -16,13 +18,19 @@ class ApiErrorException extends RuntimeException
         parent::__construct($detail ?? $title);
     }
 
-    public function render(): JsonResponse
+    public function render(Request $request): JsonResponse|RedirectResponse
     {
-        return response()->json([
-            'type' => $this->type,
-            'title' => $this->title,
-            'status' => $this->status,
-            'detail' => $this->message,
-        ], $this->status);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'type' => $this->type,
+                'title' => $this->title,
+                'status' => $this->status,
+                'detail' => $this->message,
+            ], $this->status);
+        }
+
+        return redirect()->back()
+            ->withInput()
+            ->with('error', $this->message);
     }
 }
