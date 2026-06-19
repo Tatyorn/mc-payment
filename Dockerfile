@@ -56,12 +56,14 @@ COPY . .
 COPY --from=npm /app/public/build public/build
 COPY --from=vendor /app/vendor vendor
 
-RUN php artisan storage:link --force 2>/dev/null || true
+RUN php artisan storage:link --force && \
+    php artisan octane:frankenphp --no-ansi 2>/dev/null || true
 
 RUN chown -R www-data:www-data \
     bootstrap/cache \
     storage \
-    public/storage
+    public/storage \
+    public
 
 EXPOSE 8080
 
