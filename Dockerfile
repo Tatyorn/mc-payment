@@ -38,7 +38,8 @@ RUN composer install \
     --no-progress \
     --optimize-autoloader \
     --prefer-dist \
-    --audit
+    --audit \
+    --no-scripts
 
 FROM base AS final
 
