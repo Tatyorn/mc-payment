@@ -1,0 +1,14 @@
+{
+    auto_https off
+    admin off
+    frankenphp {
+        worker /app/frankenphp-worker.php 4
+    }
+}
+
+:8080 {
+    root * /app/public
+    encode zstd br gzip
+    try_files {path} /index.php
+    file_server
+}

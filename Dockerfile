@@ -48,18 +48,23 @@ FROM base AS final
 COPY . .
 COPY --from=npm /app/public/build public/build
 COPY --from=vendor /app/vendor vendor
+COPY Caddyfile /etc/caddy/Caddyfile
 
-RUN rm -rf public/storage && php artisan storage:link --force
+RUN rm -rf bootstrap/cache/*.php public/storage && \
+    php artisan package:discover --ansi && \
+    php artisan storage:link --force && \
+    cp vendor/laravel/octane/bin/frankenphp-worker.php frankenphp-worker.php && \
+    cp vendor/laravel/octane/bin/bootstrap.php bootstrap.php
 
 RUN chown -R www-data:www-data \
     bootstrap/cache \
     storage \
     public
 
-ENV PORT=8080
+ENV APP_BASE_PATH=/app
 EXPOSE 8080
 
 HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
-    CMD php -r "echo @file_get_contents('http://localhost:8080/up') ? 'ok' : 'fail';" 2>/dev/null || exit 1
+    CMD curl -f http://localhost:8080/up || exit 1
 
-ENTRYPOINT ["frankenphp", "php-server", "-r", "public/index.php"]
+ENTRYPOINT ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
