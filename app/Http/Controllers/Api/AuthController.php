@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController
 {
+    /**
+     * Register a new user.
+     *
+     * Creates a new user account and returns the user data.
+     */
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = User::query()->updateOrCreate(
@@ -27,6 +32,11 @@ class AuthController
         ], 201);
     }
 
+    /**
+     * Authenticate a user.
+     *
+     * Validates credentials and returns a Bearer token.
+     */
     public function login(LoginRequest $request): JsonResponse
     {
         $user = User::query()
@@ -45,6 +55,11 @@ class AuthController
         ]);
     }
 
+    /**
+     * Logout the authenticated user.
+     *
+     * Revokes the current access token.
+     */
     public function logout(Request $request): JsonResponse
     {
         $token = $request->user()->token();
@@ -58,8 +73,13 @@ class AuthController
         return response()->json(['message' => __('errors.logout_success')]);
     }
 
-    public function me(Request $request): JsonResponse
+    /**
+     * Get the authenticated user.
+     *
+     * Returns the profile of the currently authenticated user.
+     */
+    public function me(Request $request): UserResource
     {
-        return response()->json(UserResource::make($request->user()));
+        return UserResource::make($request->user());
     }
 }

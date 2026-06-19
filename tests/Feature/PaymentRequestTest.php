@@ -9,6 +9,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Laravel\Passport\Passport;
 
+use function Pest\Laravel\travelTo;
+
 beforeEach(function () {
     Http::fake([
         'v6.exchangerate-api.com/*' => Http::response([
@@ -160,15 +162,19 @@ it('fails to approve an already approved request', function () {
 
 it('auto-expires pending requests after 48 hours', function () {
     $user = User::factory()->create();
+
+    $now = now();
+    travelTo($now->copy()->subHours(49));
     PaymentRequest::factory()->pending()->create([
         'user_id' => $user->id,
-        'created_at' => now()->subHours(49),
-    ]);
-    PaymentRequest::factory()->pending()->create([
-        'user_id' => $user->id,
-        'created_at' => now()->subHours(47),
     ]);
 
+    travelTo($now->copy()->subHours(47));
+    PaymentRequest::factory()->pending()->create([
+        'user_id' => $user->id,
+    ]);
+
+    travelTo($now);
     $this->artisan('payment:expire');
 
     expect(PaymentRequest::where('status', PaymentRequestStatus::EXPIRED)->count())->toBe(1)

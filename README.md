@@ -58,6 +58,27 @@ vendor/bin/sail artisan test --compact
 | `vendor/bin/sail up -d` | Start Docker containers |
 | `vendor/bin/sail artisan <cmd>` | Run Artisan via Sail |
 
+## Localization
+
+The application supports **Portuguese (Brazil)** and **English** locales.
+
+| Setting | File | Default |
+|---------|------|---------|
+| Application locale | `.env` `APP_LOCALE` | `en` |
+| Fallback locale | `.env` `APP_FALLBACK_LOCALE` | `en` |
+| Portuguese translations | `lang/pt_BR/*.php` | — |
+| English translations | `lang/en/*.php` | — |
+
+To switch locale, set `APP_LOCALE=pt_BR` in `.env`.
+
+Translation files are organized by domain:
+- `messages.php` — General UI, navigation, file uploads
+- `auth.php` — Login/register forms
+- `payment.php` — Payment request pages
+- `enums.php` — Currency and status labels
+- `errors.php` — Exception and API response messages
+- `validation.php` — Validation attribute names
+
 ## Tech Stack
 
 - **Framework:** Laravel 12
