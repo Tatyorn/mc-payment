@@ -12,25 +12,27 @@ RUN install-php-extensions \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
-
 WORKDIR /app
+
+RUN mkdir -p \
+    bootstrap/cache \
+    storage/app/public \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs && \
+    chown -R www-data:www-data bootstrap/cache storage
 
 FROM node:23 AS npm
-
-RUN mkdir -p /app/public/build
-
 WORKDIR /app
-
+RUN mkdir -p /app/public/build
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
-
 COPY vite.config.js ./
 COPY resources/ resources/
-
 RUN npm run build
 
 FROM base AS vendor
-
 COPY composer.json composer.lock ./
 RUN composer install \
     --no-dev \
@@ -43,31 +45,21 @@ RUN composer install \
 
 FROM base AS final
 
-RUN mkdir -p \
-    bootstrap/cache \
-    storage/app/public \
-    storage/framework/cache \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/logs
-
 COPY . .
-
 COPY --from=npm /app/public/build public/build
 COPY --from=vendor /app/vendor vendor
 
-RUN php artisan storage:link --force && \
-    php artisan octane:frankenphp --no-ansi 2>/dev/null || true
+RUN rm -rf public/storage && php artisan storage:link --force
 
 RUN chown -R www-data:www-data \
     bootstrap/cache \
     storage \
-    public/storage \
     public
 
+ENV PORT=8080
 EXPOSE 8080
 
 HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
     CMD php -r "echo @file_get_contents('http://localhost:8080/up') ? 'ok' : 'fail';" 2>/dev/null || exit 1
 
-ENTRYPOINT ["php", "artisan", "octane:frankenphp", "--host=0.0.0.0", "--port=8080", "--workers=4"]
+ENTRYPOINT ["frankenphp", "php-server", "-r", "public/index.php"]
